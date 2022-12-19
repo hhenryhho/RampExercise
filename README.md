@@ -107,7 +107,7 @@ We don't have a real API for this challenge, so we added some utilities to simul
 
 **Actual:** The page crashes
 
-**Solution:** In src/App.tsx:67, added a check for `EMPTY_EMPLOYEE.id`
+**Solution:** In src/App.tsx:88, added a check for `EMPTY_EMPLOYEE.id`
 
 # Bug 4: Clicking on View More button not showing correct data
 
@@ -181,6 +181,8 @@ _This bug has 2 wrong behaviors that can be fixed with the same solution. It's a
 
 **Actual:** When you reach the end of the data, the **View More** button is still showing and you are still able to click the button. If you click it, the page crashes.
 
+**Solution:** In src/App.tsx:103, add guard clause to check if transactions exist, it is not filtering by employee, and there are more transactions to be viewed
+
 # Bug 7: Approving a transaction won't persist the new value
 
 _You need to fix some of the previous bugs in order to reproduce_
@@ -199,6 +201,8 @@ _You need to fix some of the previous bugs in order to reproduce_
 **Expected:** In steps 6 and 8, toggled transaction kept the same value it was given in step 2 _(E.g. Social Media Ads Inc is unchecked)_
 
 **Actual:** In steps 6 and 8, toggled transaction lost the value given in step 2. _(E.g. Social Media Ads Inc is checked again)_
+
+**Solution:** In src/components/Transactions/index.tsx:17, clear cache for `paginatedTransactions`, `transactionsByEmployee` to re-fetch new data on load
 
 ## Submission
 
