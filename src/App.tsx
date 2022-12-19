@@ -13,31 +13,53 @@ export function App() {
   const { data: paginatedTransactions, ...paginatedTransactionsUtils } = usePaginatedTransactions()
   const { data: transactionsByEmployee, ...transactionsByEmployeeUtils } = useTransactionsByEmployee()
   const [isLoading, setIsLoading] = useState(false)
+  const [currentEmployee, setCurrentEmployee] = useState<Employee | null>(null)
 
+  /**
+   * Transactions are either:
+   *  1. paginated transactions if they exist
+   *  2. transactions by employee if they exist
+   *  3. null otherwise
+   */
   const transactions = useMemo(
     () => paginatedTransactions?.data ?? transactionsByEmployee ?? null,
     [paginatedTransactions, transactionsByEmployee]
   )
 
+  /**
+   * Load all transactions, useful when filter is "All Employees"
+   */
   const loadAllTransactions = useCallback(async () => {
     setIsLoading(true)
+    // Set all transactions by employee to null
     transactionsByEmployeeUtils.invalidateData()
-
+    // Fetch all employees to populate the filter
     await employeeUtils.fetchAll()
-    await paginatedTransactionsUtils.fetchAll()
-
+    // Set loading to false, as we're done loading employees
     setIsLoading(false)
+    // Fetch all transactions to populate the table
+    await paginatedTransactionsUtils.fetchAll()
   }, [employeeUtils, paginatedTransactionsUtils, transactionsByEmployeeUtils])
 
+  /**
+   * Load transactions by employee, useful when filter is one of the employees
+   * @param employeeId The employee id to load transactions for
+   */
   const loadTransactionsByEmployee = useCallback(
     async (employeeId: string) => {
+      // Set paginated transactions to null
       paginatedTransactionsUtils.invalidateData()
+      // Fetch the transactions by employee
       await transactionsByEmployeeUtils.fetchById(employeeId)
     },
     [paginatedTransactionsUtils, transactionsByEmployeeUtils]
   )
 
+  /*
+   * Load all transactions on mount
+   */
   useEffect(() => {
+    // Only load all transactions if there are no employees and we're not loading
     if (employees === null && !employeeUtils.loading) {
       loadAllTransactions()
     }
@@ -47,7 +69,6 @@ export function App() {
     <Fragment>
       <main className="MainContainer">
         <Instructions />
-
         <hr className="RampBreak--l" />
 
         <InputSelect<Employee>
@@ -64,7 +85,12 @@ export function App() {
             if (newValue === null) {
               return
             }
-
+            if (newValue.id === EMPTY_EMPLOYEE.id) {
+              setCurrentEmployee(null)
+              await loadAllTransactions()
+              return
+            }
+            setCurrentEmployee(newValue)
             await loadTransactionsByEmployee(newValue.id)
           }}
         />
@@ -79,7 +105,11 @@ export function App() {
               className="RampButton"
               disabled={paginatedTransactionsUtils.loading}
               onClick={async () => {
-                await loadAllTransactions()
+                if (currentEmployee === null) {
+                  await loadAllTransactions()
+                  return
+                }
+                await loadTransactionsByEmployee(currentEmployee.id)
               }}
             >
               View More

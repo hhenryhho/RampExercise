@@ -107,6 +107,8 @@ We don't have a real API for this challenge, so we added some utilities to simul
 
 **Actual:** The page crashes
 
+**Solution:** In src/App.tsx:67, added a check for `EMPTY_EMPLOYEE.id`
+
 # Bug 4: Clicking on View More button not showing correct data
 
 **How to reproduce:**
@@ -117,6 +119,9 @@ We don't have a real API for this challenge, so we added some utilities to simul
 **Expected:** Initial transactions plus new transactions are shown on the page
 
 **Actual:** New transactions replace initial transactions, losing initial transactions
+
+**Solution:** In src/hooks/usePaginatedTransactions.ts, append new response to previous response,
+and set a check for end of pagination
 
 # Bug 5: Employees filter not available during loading more data
 
@@ -145,6 +150,8 @@ _This bug has 2 wrong behaviors that will be fixed with the same solution_
 **Expected:** The employees filter should not show "Loading employees..." after clicking **View more**, as employees are already loaded
 
 **Actual:** The employees filter shows "Loading employees..." after clicking **View more** until new transactions are loaded.
+
+**Solution:** In src/App.tsx:39, set loading to false after employee fetch and before transaction fetch
 
 # Bug 6: View more button not working as expected
 

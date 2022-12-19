@@ -108,8 +108,8 @@ function mockApiLogger({
 function getTimeout() {
   const timeout = parseInt(
     new URL(document.location as unknown as URL).searchParams.get("timeout") ??
-      process.env.REACT_APP_TIMEOUT_MULTIPLIER ??
-      "1000"
+    process.env.REACT_APP_TIMEOUT_MULTIPLIER ??
+    "1000"
   )
 
   if (Number.isNaN(timeout)) {
