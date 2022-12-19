@@ -50,6 +50,9 @@ export function useCustomFetch() {
     [wrappedRequest]
   )
 
+  /**
+   * Clears the cache, so using fetchWithCache will fetch new data
+   */
   const clearCache = useCallback(() => {
     if (cache?.current === undefined) {
       return
@@ -58,6 +61,10 @@ export function useCustomFetch() {
     cache.current = new Map<string, string>()
   }, [cache])
 
+  /**
+   * Clears the cache based on the endpoints passed in
+   * @param endpointsToClear An array of endpoints to clear
+   */
   const clearCacheByEndpoint = useCallback(
     (endpointsToClear: RegisteredEndpoints[]) => {
       if (cache?.current === undefined) {

@@ -100,21 +100,19 @@ export function App() {
         <div className="RampGrid">
           <Transactions transactions={transactions} />
 
-          {transactions !== null && (
-            <button
-              className="RampButton"
-              disabled={paginatedTransactionsUtils.loading}
-              onClick={async () => {
-                if (currentEmployee === null) {
+          {transactions !== null && // If we have transactions
+            currentEmployee === null && // And we're not filtering by employee
+            paginatedTransactions?.nextPage !== -1 && ( // And there are more transactions to load
+              <button
+                className="RampButton"
+                disabled={paginatedTransactionsUtils.loading}
+                onClick={async () => {
                   await loadAllTransactions()
-                  return
-                }
-                await loadTransactionsByEmployee(currentEmployee.id)
-              }}
-            >
-              View More
-            </button>
-          )}
+                }}
+              >
+                View More
+              </button>
+            )}
         </div>
       </main>
     </Fragment>

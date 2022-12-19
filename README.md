@@ -92,7 +92,7 @@ We don't have a real API for this challenge, so we added some utilities to simul
 
 **Actual:** Nothing happens
 
-**Solution:** In src\components\InputCheckbox\index.tsx:11, add htmlFor prop to reference input
+**Solution:** In src/components/InputCheckbox/index.tsx:11, add htmlFor prop to reference input
 
 # Bug 3: Cannot select _All Employees_ after selecting an employee
 

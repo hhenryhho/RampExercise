@@ -27,10 +27,6 @@ export function usePaginatedTransactions(): PaginatedTransactionsResult {
     )
 
     setPaginatedTransactions((previousResponse) => {
-
-      console.log('previousResponse', previousResponse)
-      console.log("response", response)
-
       // If this is the first request, return the response as is
       if (response === null || previousResponse === null) {
         return response
